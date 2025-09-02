@@ -65,43 +65,6 @@ A modern, full-stack e-commerce website built with Vue 3, TypeScript, Tailwind C
    ```bash
    npm run dev
    ```
-
-## Default Login Credentials
-
-- **Admin User**: 
-  - Email: admin@example.com
-  - Password: admin123
-
-## Project Structure
-
-```
-ShopVue/
-├── public/
-│   └── images/products/     # Product images
-├── src/
-│   ├── components/          # Reusable Vue components
-│   ├── stores/              # Pinia state management
-│   ├── views/               # Page components
-│   ├── router/              # Vue Router configuration
-│   └── types/               # TypeScript type definitions
-├── backend/
-│   ├── api/                 # PHP API endpoints
-│   ├── config/              # Database configuration
-│   ├── check_db.php         # Database setup script
-│   └── init_products.php    # Sample data initialization
-└── README.md
-```
-
-## API Endpoints
-
-- `GET /backend/api/products/list.php` - Get all products
-- `GET /backend/api/products/get.php?id={id}` - Get single product
-- `POST /backend/api/auth/register.php` - User registration
-- `POST /backend/api/auth/login.php` - User login
-- `GET /backend/api/cart/list.php` - Get cart items
-- `POST /backend/api/cart/add.php` - Add to cart
-- `POST /backend/api/orders/create.php` - Create order
-
 ## Features Overview
 
 ### Home Page
