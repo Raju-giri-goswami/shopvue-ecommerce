@@ -1,0 +1,137 @@
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import axios from 'axios'
+
+interface UserProfile {
+  id: string
+  user_id: string
+  full_name: string
+  is_admin: boolean
+}
+
+interface User {
+  id: string
+  email: string
+  profile?: UserProfile
+}
+
+const API_BASE = '/ShopVue/backend/api'
+
+export const useAuthStore = defineStore('auth', () => {
+  const user = ref<User | null>(null)
+  const loading = ref(false)
+
+  const isAuthenticated = computed(() => !!user.value)
+  const isAdmin = computed(() => user.value?.profile?.is_admin || false)
+
+  const signUp = async (email: string, password: string, fullName: string) => {
+    loading.value = true
+    try {
+      const response = await axios.post(`${API_BASE}/auth/register.php`, {
+        email,
+        password,
+        name: fullName
+      })
+
+      if (response.data.success) {
+        return { success: true }
+      } else {
+        throw new Error(response.data.message)
+      }
+    } catch (error: any) {
+      return { 
+        success: false, 
+        error: error.response?.data?.message || error.message 
+      }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const signIn = async (email: string, password: string) => {
+    loading.value = true
+    try {
+      const response = await axios.post(`${API_BASE}/auth/login.php`, {
+        email,
+        password
+      })
+
+      if (response.data.success) {
+        user.value = {
+          id: response.data.user.id,
+          email: response.data.user.email,
+          profile: {
+            id: response.data.user.profile.id,
+            user_id: response.data.user.id,
+            full_name: response.data.user.profile.full_name,
+            is_admin: response.data.user.profile.is_admin
+          }
+        }
+        return { success: true }
+      } else {
+        throw new Error(response.data.message)
+      }
+    } catch (error: any) {
+      return { 
+        success: false, 
+        error: error.response?.data?.message || error.message 
+      }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const signOut = async () => {
+    loading.value = true
+    try {
+      await axios.post(`${API_BASE}/auth/logout.php`)
+      user.value = null
+      return { success: true }
+    } catch (error: any) {
+      return { 
+        success: false, 
+        error: error.response?.data?.message || error.message 
+      }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const getSession = async () => {
+    loading.value = true
+    try {
+      const response = await axios.get(`${API_BASE}/auth/user.php`)
+      
+      if (response.data.success && response.data.user) {
+        user.value = {
+          id: response.data.user.id,
+          email: response.data.user.email,
+          profile: {
+            id: response.data.user.profile.id,
+            user_id: response.data.user.id,
+            full_name: response.data.user.profile.full_name,
+            is_admin: response.data.user.profile.is_admin
+          }
+        }
+      }
+    } catch (error) {
+      user.value = null
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Load the session when the store is initialized
+  getSession()
+
+  return {
+    user,
+    loading,
+    isAuthenticated,
+    isAdmin,
+    signUp,
+    signIn,
+    signOut,
+    getSession
+  }
+})

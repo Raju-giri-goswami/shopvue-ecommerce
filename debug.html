@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Products</title>
+</head>
+<body>
+    <h1>Debug Products API</h1>
+    <div id="output"></div>
+    
+    <script>
+        async function testProductsAPI() {
+            try {
+                console.log('Testing products API...');
+                const response = await fetch('http://localhost/ShopVue/backend/api/products/list.php');
+                const data = await response.json();
+                
+                console.log('API Response:', data);
+                document.getElementById('output').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                
+                if (data.data && Array.isArray(data.data)) {
+                    console.log('Products count:', data.data.length);
+                    console.log('First product:', data.data[0]);
+                } else {
+                    console.error('Invalid response format');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('output').innerHTML = 'Error: ' + error.message;
+            }
+        }
+        
+        testProductsAPI();
+    </script>
+</body>
+</html>

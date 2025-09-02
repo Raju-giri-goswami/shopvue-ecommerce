@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Session Test</title>
+</head>
+<body>
+    <h1>Cart Session Test</h1>
+    <div>
+        <h2>Current User ID:</h2>
+        <p id="userId">Loading...</p>
+    </div>
+    <div>
+        <h2>Cart Items:</h2>
+        <p id="cartItems">Loading...</p>
+    </div>
+    <button onclick="clearUserId()">Clear User ID (Simulate Logout)</button>
+    <button onclick="generateNewUserId()">Generate New User ID (Simulate Login)</button>
+    <button onclick="refreshPage()">Refresh Page</button>
+
+    <script>
+        function updateDisplay() {
+            const userId = localStorage.getItem('shopvue_user_id') || 'No user ID';
+            const cartItems = localStorage.getItem('shopvue_cart') || 'No cart data';
+
+            document.getElementById('userId').textContent = userId;
+            document.getElementById('cartItems').textContent = cartItems;
+        }
+
+        function clearUserId() {
+            localStorage.removeItem('shopvue_user_id');
+            updateDisplay();
+            alert('User ID cleared (simulating logout)');
+        }
+
+        function generateNewUserId() {
+            const newUserId = 'test_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('shopvue_user_id', newUserId);
+            updateDisplay();
+            alert('New user ID generated (simulating login)');
+        }
+
+        function refreshPage() {
+            location.reload();
+        }
+
+        // Initial display
+        updateDisplay();
+    </script>
+</body>
+</html>
